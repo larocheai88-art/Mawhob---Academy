@@ -6,7 +6,7 @@
 <title>أكاديمية الموهوب - إدارة الاشتراكات</title>
 <style>
 /* PASSWORD SCREEN */
-.lock-screen{position:fixed;inset:0;background:linear-gradient(135deg,#1E3A5F 0%,#0F2A47 100%);display:flex;align-items:center;justify-content:center;z-index:99999;flex-direction:column;gap:0}
+.lock-screen{position:fixed;inset:0;background:linear-gradient(135deg,#1E3A5F 0%,#0F2A47 100%);display:flex;align-items:center;justify-content:center;z-index:99999;flex-direction:column;gap:0;transition:opacity .4s}
 .lock-box{background:#fff;border-radius:20px;padding:36px 28px;max-width:340px;width:92%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.4)}
 .lock-icon{font-size:52px;margin-bottom:12px}
 .lock-title{font-size:20px;font-weight:900;color:#1E3A5F;margin-bottom:4px}
@@ -1526,12 +1526,9 @@ function checkPassword(){
   const val = document.getElementById("lock-input").value;
   if(val === APP_PASSWORD){
     const ls = document.getElementById("lock-screen");
-    ls.style.transition="opacity .4s";
     ls.style.opacity="0";
     setTimeout(()=>{ 
-      ls.style.display="none";
-      ls.style.visibility="hidden";
-      ls.style.zIndex="-1";
+      ls.remove();
       init(); 
     },400);
   } else {
