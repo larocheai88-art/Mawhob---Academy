@@ -1580,41 +1580,6 @@ async function init(){
       sr.style.display="none";
   });
 }
-/* ===================== PASSWORD ===================== */
-const APP_PASSWORD = "422710";
-let failedAttempts = 0;
-let lockUntil = 0;
-
-function checkPassword(){
-  const now = Date.now();
-  if(now < lockUntil){
-    const secs = Math.ceil((lockUntil - now) / 1000);
-    document.getElementById("lock-error").style.display="block";
-    document.getElementById("lock-error").textContent = `⏳ انتظر ${secs} ثانية`;
-    return;
-  }
-  const val = document.getElementById("lock-input").value;
-  if(val === APP_PASSWORD){
-    const ls = document.getElementById("lock-screen");
-    ls.style.transition="opacity .4s";
-    ls.style.opacity="0";
-    setTimeout(()=>{ ls.style.display="none"; },400);
-    init();
-  } else {
-    failedAttempts++;
-    document.getElementById("lock-input").value="";
-    document.getElementById("lock-error").style.display="block";
-    document.getElementById("lock-error").textContent="❌ كلمة المرور غلط — حاول تاني";
-    if(failedAttempts >= 3){
-      lockUntil = Date.now() + 30000;
-      document.getElementById("lock-attempts").textContent="🔒 تم القفل 30 ثانية";
-      setTimeout(()=>{ failedAttempts=0; document.getElementById("lock-attempts").textContent=""; document.getElementById("lock-error").style.display="none"; }, 30000);
-    } else {
-      document.getElementById("lock-attempts").textContent=`محاولات فاشلة: ${failedAttempts}/3`;
-    }
-  }
-}
-
 // App starts via password screen
 </script>
 </body>
