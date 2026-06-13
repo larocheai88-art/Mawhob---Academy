@@ -185,6 +185,20 @@ label{font-size:12px;font-weight:600;color:#374151}
 </head>
 <body>
 
+<!-- LOCK SCREEN -->
+<div class="lock-screen" id="lock-screen">
+  <div class="lock-box">
+    <div class="lock-icon">🔐</div>
+    <div class="lock-title">أكاديمية الموهوب</div>
+    <div class="lock-sub">أدخل كلمة المرور للمتابعة</div>
+    <input class="lock-input" id="lock-input" type="password" placeholder="••••••" maxlength="20"
+      onkeydown="if(event.key==='Enter') checkPassword()"/>
+    <button class="lock-btn" onclick="checkPassword()">🔓 دخول</button>
+    <div class="lock-error" id="lock-error">❌ كلمة المرور غلط — حاول تاني</div>
+    <div class="lock-attempts" id="lock-attempts"></div>
+  </div>
+</div>
+
 <div class="lock-title">أكاديمية الموهوب</div>
     <div class="lock-sub">أدخل كلمة المرور للمتابعة</div>
     <input class="lock-input" id="lock-input" type="password" placeholder="••••••" maxlength="20"
@@ -1566,7 +1580,42 @@ async function init(){
       sr.style.display="none";
   });
 }
-init();
+/* ===================== PASSWORD ===================== */
+const APP_PASSWORD = "422710";
+let failedAttempts = 0;
+let lockUntil = 0;
+
+function checkPassword(){
+  const now = Date.now();
+  if(now < lockUntil){
+    const secs = Math.ceil((lockUntil - now) / 1000);
+    document.getElementById("lock-error").style.display="block";
+    document.getElementById("lock-error").textContent = `⏳ انتظر ${secs} ثانية`;
+    return;
+  }
+  const val = document.getElementById("lock-input").value;
+  if(val === APP_PASSWORD){
+    const ls = document.getElementById("lock-screen");
+    ls.style.transition="opacity .4s";
+    ls.style.opacity="0";
+    setTimeout(()=>{ ls.style.display="none"; },400);
+    init();
+  } else {
+    failedAttempts++;
+    document.getElementById("lock-input").value="";
+    document.getElementById("lock-error").style.display="block";
+    document.getElementById("lock-error").textContent="❌ كلمة المرور غلط — حاول تاني";
+    if(failedAttempts >= 3){
+      lockUntil = Date.now() + 30000;
+      document.getElementById("lock-attempts").textContent="🔒 تم القفل 30 ثانية";
+      setTimeout(()=>{ failedAttempts=0; document.getElementById("lock-attempts").textContent=""; document.getElementById("lock-error").style.display="none"; }, 30000);
+    } else {
+      document.getElementById("lock-attempts").textContent=`محاولات فاشلة: ${failedAttempts}/3`;
+    }
+  }
+}
+
+// App starts via password screen
 </script>
 </body>
 </html>
