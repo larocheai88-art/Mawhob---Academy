@@ -1525,10 +1525,15 @@ function checkPassword(){
   }
   const val = document.getElementById("lock-input").value;
   if(val === APP_PASSWORD){
-    document.getElementById("lock-screen").style.transition="opacity .4s";
-    document.getElementById("lock-screen").style.opacity="0";
-    setTimeout(()=>{ document.getElementById("lock-screen").style.display="none"; },400);
-    init();
+    const ls = document.getElementById("lock-screen");
+    ls.style.transition="opacity .4s";
+    ls.style.opacity="0";
+    setTimeout(()=>{ 
+      ls.style.display="none";
+      ls.style.visibility="hidden";
+      ls.style.zIndex="-1";
+      init(); 
+    },400);
   } else {
     failedAttempts++;
     document.getElementById("lock-input").value="";
